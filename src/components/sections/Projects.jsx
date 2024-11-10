@@ -64,8 +64,7 @@ const Projects = () => {
       <Wrapper>
         <Title>Projects</Title>
         <Desc style={{ marginBottom: "40px" }}>
-          I have worked on a wide range of projects. From web apps to android
-          apps. Here are some of my projects.
+          I have worked on a wide range of projects.Some of them are:
         </Desc>
 
         <CardContainer>
