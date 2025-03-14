@@ -1,3 +1,4 @@
+import React, { useEffect } from "react";
 import styled, { ThemeProvider } from "styled-components";
 import { darkTheme } from "./utils/Themes";
 import Navbar from "./components/Navbar";
@@ -35,25 +36,35 @@ const Wrapper = styled.div`
 `;
 
 function App() {
+  useEffect(() => {
+    // Set document title
+    document.title = "Surya Ravi";
+    
+    // Set custom favicon dynamically
+    const link = document.querySelector("link[rel~='icon']") || document.createElement('link');
+    link.type = 'image/jpg';
+    link.rel = 'icon';
+    link.href = process.env.PUBLIC_URL + '/icon_hack.jpg';
+    document.head.appendChild(link);
+  }, []);
+  
   return (
     <ThemeProvider theme={darkTheme}>
       <BrowserRouter>
         <Navbar />
         <Body>
           <StartCanvas />
-          <div>
-            <Hero />
-            <Wrapper>
-              <Skills />
-              <Experience />
-            </Wrapper>
-            <Projects />
-            <Wrapper>
-              <Education />
-              <Contact />
-            </Wrapper>
-            <Footer />
-          </div>
+          <Hero />
+          <Wrapper>
+            <Skills />
+            <Experience />
+          </Wrapper>
+          <Projects />
+          <Wrapper>
+            <Education />
+            <Contact />
+          </Wrapper>
+          <Footer />
         </Body>
       </BrowserRouter>
     </ThemeProvider>

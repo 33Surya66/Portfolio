@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import styled from "styled-components";
 import emailjs from "@emailjs/browser";
 
@@ -100,7 +100,7 @@ const ContactButton = styled.input`
   width: 100%;
   text-decoration: none;
   text-align: center;
-  background: green;
+  background: ${({ theme }) => theme.primary};
   padding: 13px 16px;
   margin-top: 2px;
   border-radius: 12px;
@@ -109,33 +109,54 @@ const ContactButton = styled.input`
   font-size: 18px;
   font-weight: 600;
   cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  &:hover {
+    transform: scale(1.02);
+    background: ${({ theme }) => theme.primary + 90};
+  }
+`;
+
+const StatusMessage = styled.div`
+  margin-top: 10px;
+  font-size: 16px;
+  color: ${props => props.isError ? '#ff6b6b' : '#4ade80'};
+  text-align: center;
 `;
 
 const Contact = () => {
   const form = useRef();
+  const [status, setStatus] = useState({ message: "", isError: false });
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true);
+    setStatus({ message: "", isError: false });
+
+    // Replace with your EmailJS service ID, template ID, and user ID
     emailjs
       .sendForm(
-        "service_tox7kqs",
-        "template_nv7k7mj",
+        "service_gzr313n", // Replace with your service ID
+        "template_r8xlbwj", // Replace with your template ID
         form.current,
-        "SybVGsYS52j2TfLbi"
+        "pNPOcyPut-qXaug8d" // Replace with your user ID
       )
       .then(
         (result) => {
-          alert("Message Sent");
+          setStatus({ message: "Message sent successfully!", isError: false });
           form.current.reset(); // Reset the form after successful submission
+          setLoading(false);
         },
         (error) => {
-          alert("Error: " + error.text);
+          setStatus({ message: "Error sending message. Please try again.", isError: true });
+          console.error("EmailJS error:", error);
+          setLoading(false);
         }
       );
   };
 
   return (
-    <Container id="Education">
+    <Container id="contact">
       <Wrapper>
         <Title>Contact</Title>
         <Desc style={{ marginBottom: "40px" }}>
@@ -143,7 +164,7 @@ const Contact = () => {
         </Desc>
         <ContactForm ref={form} onSubmit={handleSubmit}>
           <ContactTitle>Email Me 🚀</ContactTitle>
-          <ContactInput placeholder="Your Email" name="from_email" required />
+          <ContactInput placeholder="Your Email" name="from_email" type="email" required />
           <ContactInput placeholder="Your Name" name="from_name" required />
           <ContactInput placeholder="Subject" name="subject" required />
           <ContactInputMessage
@@ -152,7 +173,16 @@ const Contact = () => {
             rows={4}
             required
           />
-          <ContactButton type="submit" value="Send" />
+          <ContactButton 
+            type="submit" 
+            value={loading ? "Sending..." : "Send"} 
+            disabled={loading}
+          />
+          {status.message && (
+            <StatusMessage isError={status.isError}>
+              {status.message}
+            </StatusMessage>
+          )}
         </ContactForm>
       </Wrapper>
     </Container>
